@@ -16,23 +16,26 @@ namespace Padoru.Core
         
         private static readonly ConcurrentDictionary<FieldInfo, object> fieldsData = new();
 
+        /// <summary>
+        /// Returns an unsubscribe token
+        /// </summary>
         public static Action Subscribe<T, TValue>(this T _, Expression<Func<T, TValue>> expression, Action<T> callback)
         {
             var metadata = GetMetadata(expression);
 
             metadata.Notifier.Subscribe(callback);
 
-            var subscriptionGUID = Guid.NewGuid().ToString();
+            var subscriptionGuid = Guid.NewGuid().ToString();
             
-            Action unsubscribeToken = () =>
+            void UnsubscribeToken()
             {
                 metadata.Notifier.Unsubscribe(callback);
-                metadata.UnsubscribeTokens.Remove(subscriptionGUID);
-            };
+                metadata.UnsubscribeTokens.Remove(subscriptionGuid);
+            }
+
+            metadata.UnsubscribeTokens.Add(subscriptionGuid, UnsubscribeToken);
             
-            metadata.UnsubscribeTokens.Add(subscriptionGUID, unsubscribeToken);
-            
-            return unsubscribeToken;
+            return UnsubscribeToken;
         }
 
         public static void Notify<T, TValue>(this T obj, Expression<Func<T, TValue>> expression)
