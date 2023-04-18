@@ -5,22 +5,22 @@ using Debug = Padoru.Diagnostics.Debug;
 public class TestClassLala : MonoBehaviour
 {
     [Subscribable]
-    public string lolo = "Lele";
+    public int lolo = 1;
     
     // Start is called before the first frame update
     void Start()
     {
         var token = lolo.Subscribe(x => lolo, OnLoloChanged);
-        lolo = "Lolo";
+        lolo = 2;
         lolo.Notify(x => lolo);
-        lolo = "Lulu";
+        lolo = 3;
         lolo.Notify(x => lolo);
         token?.Invoke();
-        lolo = "Lele";
+        lolo = 4;
         lolo.Notify(x => lolo);
     }
 
-    private void OnLoloChanged(string obj)
+    private void OnLoloChanged(int obj)
     {
         Debug.LogError(obj);
     }
