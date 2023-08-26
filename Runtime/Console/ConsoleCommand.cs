@@ -1,4 +1,4 @@
-namespace Padoru.Core.DebugConsole
+namespace Padoru.Core.Diagnostics
 {
 	public abstract class ConsoleCommand
 	{

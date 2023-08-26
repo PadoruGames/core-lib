@@ -1,6 +1,6 @@
 using Debug = Padoru.Diagnostics.Debug;
 
-namespace Padoru.Core.DebugConsole
+namespace Padoru.Core.Diagnostics
 {
 	[ConsoleCommand(CommandName = "log")]
 	public class LogCommand : ConsoleCommand

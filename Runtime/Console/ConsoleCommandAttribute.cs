@@ -1,6 +1,6 @@
 using System;
 
-namespace Padoru.Core.DebugConsole
+namespace Padoru.Core.Diagnostics
 {
 	[AttributeUsage(AttributeTargets.Class)]
 	public class ConsoleCommandAttribute : Attribute
