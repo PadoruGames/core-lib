@@ -1,37 +1,32 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using LogType = Padoru.Diagnostics.LogType;
 
 namespace Padoru.Core.Diagnostics
 {
 	public class Console
 	{
 		public const string INPUT_FIELD_CONTROL_NAME = "ConsoleInputField";
+		public const string USER_INPUT_CHANNEL = "UserInput";
 		
 		private readonly Dictionary<string, InstancedTypeData<ConsoleCommand, ConsoleCommandAttribute>> commands;
 		private readonly IHeaderDrawer headerDrawer;
-		private readonly ITextAreaDrawer textAreaDrawer;
+		private readonly ILogsAreaDrawer logsAreaDrawer;
 		private readonly IInputFieldDrawer inputFieldDrawer;
 		
 		private bool showConsole;
-		private Rect headerRect;
-		private Rect textAreaRect;
-		private Rect inputFieldRect;
-		private Rect consoleRect;
-		private Rect inputFieldBox;
 
 		public Console(
 			IHeaderDrawer headerDrawer, 
-			ITextAreaDrawer textAreaDrawer, 
+			ILogsAreaDrawer logsAreaDrawer, 
 			IInputFieldDrawer inputFieldDrawer,
 			Dictionary<string, InstancedTypeData<ConsoleCommand, ConsoleCommandAttribute>> commands)
 		{
 			this.headerDrawer = headerDrawer;
-			this.textAreaDrawer = textAreaDrawer;
+			this.logsAreaDrawer = logsAreaDrawer;
 			this.inputFieldDrawer = inputFieldDrawer;
 			this.commands = commands;
-
-			CalculateRects();
 		}
 
 		public void ToggleConsole()
@@ -50,11 +45,19 @@ namespace Padoru.Core.Diagnostics
 			{
 				return;
 			}
+
+			var consoleAreaStyle = new GUIStyle(GUI.skin.box)
+			{
+				fixedWidth = Screen.width
+			};
+
+			GUILayout.BeginVertical(consoleAreaStyle);
+
+			//headerDrawer.Draw();
+			logsAreaDrawer.Draw();
+			inputFieldDrawer.Draw();
 			
-			DrawBackground();
-			headerDrawer.Draw(headerRect);
-			textAreaDrawer.Draw(textAreaRect);
-			inputFieldDrawer.Draw(inputFieldBox);
+			GUILayout.EndVertical();
 			
 			// Force focus to the console while opened
 			FocusConsole();
@@ -63,6 +66,18 @@ namespace Padoru.Core.Diagnostics
 
 		public void ProcessInput()
 		{
+			if (string.IsNullOrWhiteSpace(inputFieldDrawer.Input))
+			{
+				return;
+			}
+
+			Log(new LogEntry()
+			{
+				message = inputFieldDrawer.Input,
+				channel = USER_INPUT_CHANNEL,
+				logType = LogType.Info
+			});
+			
 			var parameters = inputFieldDrawer.Input.Split(' ');
 			if(parameters.Length <= 0)
 			{
@@ -79,6 +94,11 @@ namespace Padoru.Core.Diagnostics
 			inputFieldDrawer.ClearInput();
 		}
 
+		public void Log(LogEntry logEntry)
+		{
+			logsAreaDrawer.AddLog(logEntry);
+		}
+
 		private void FocusConsole()
 		{
 			if (!showConsole || GUI.GetNameOfFocusedControl() == INPUT_FIELD_CONTROL_NAME)
@@ -87,28 +107,6 @@ namespace Padoru.Core.Diagnostics
 			}
 
 			GUI.FocusControl(INPUT_FIELD_CONTROL_NAME);
-		}
-
-		private void DrawBackground()
-		{
-			GUI.Box(consoleRect, "");
-		}
-
-		private void CalculateRects()
-		{
-			var y = 0f;
-			headerRect = new Rect(0, y, Screen.width, 30);
-			y += headerRect.height;
-			textAreaRect = new Rect(0, y, Screen.width, 300);
-			y += textAreaRect.height;
-			inputFieldRect = new Rect(0, y, Screen.width, 40);
-			inputFieldBox = inputFieldRect.AddMargin(5);
-			
-			consoleRect = new Rect(
-				0, 
-				0, 
-				Screen.width,
-				headerRect.height + inputFieldRect.height + textAreaRect.height);
 		}
 	}
 }

@@ -5,9 +5,7 @@ namespace Padoru.Core.Diagnostics
 {
 	public class InputFieldDrawer : IInputFieldDrawer
 	{
-		private const float INPUT_FIELD_MARGIN = 5;
-
-		private string[] availableCommands;
+		private readonly string[] availableCommands;
 		
 		public string Input { get; private set; }
 
@@ -16,18 +14,28 @@ namespace Padoru.Core.Diagnostics
 			this.availableCommands = availableCommands;
 		}
 		
-		public void Draw(Rect box)
+		public void Draw()
 		{
-			GUI.Box(box, "");
-			
-			GUI.backgroundColor = new Color(0, 0, 0, 0);
-
 			GUI.SetNextControlName(Console.INPUT_FIELD_CONTROL_NAME);
-			
-			Input = GUI.TextField(box.AddMargin(INPUT_FIELD_MARGIN), Input);
 
-			// WIP
+			// For some reason when using a GUIStyle on this one, the TextField disappears. 
+			// The background should be drawn here so we can stack the text and the suggestion horizontally
+			GUILayout.BeginHorizontal(GUILayout.Height(25));
+			
+			var inputFieldStyle = new GUIStyle(GUI.skin.box)
+			{
+				alignment = TextAnchor.MiddleLeft,
+				normal =
+				{
+					textColor = Color.white
+				},
+			};
+			
+			Input = GUILayout.TextField(Input, inputFieldStyle, GUILayout.ExpandHeight(true));
+
 			//DrawSuggestion();
+			
+			GUILayout.EndHorizontal();
 			
 			if (Input == "`")
 			{
@@ -48,7 +56,7 @@ namespace Padoru.Core.Diagnostics
 			}
 			
 			var suggestedCommand = availableCommands.FirstOrDefault(s => s.Contains(Input));
-				
+			
 			if (string.IsNullOrWhiteSpace(suggestedCommand))
 			{
 				return;

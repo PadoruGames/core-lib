@@ -10,28 +10,32 @@ namespace Padoru.Core.Diagnostics
 {
 	public class ConsoleInitializer : MonoBehaviour
 	{
-		private Console drawer;
+		private Console console;
 
 		private void Awake()
 		{
 			var commands = GetCommands();
 			
-			drawer = new Console(new HeaderDrawer(), new TextAreaDrawer(), new InputFieldDrawer(commands.Keys.ToArray()), commands);
+			console = new Console(new HeaderDrawer(), new LogsAreaDrawer(), new InputFieldDrawer(commands.Keys.ToArray()), commands);
+			
+			var consoleOutput = new PadoruLoggerConsoleOutput(console);
+			
+			Debug.AddOutput(consoleOutput);
 		}
 
 		private void OnGUI()
 		{
 			if (Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.BackQuote)
 			{
-				drawer.ToggleConsole();
+				console.ToggleConsole();
 			}
 			
 			if (Event.current.type == EventType.KeyDown && (Event.current.keyCode == KeyCode.Return || Event.current.keyCode == KeyCode.KeypadEnter))
 			{
-				drawer.ProcessInput();
+				console.ProcessInput();
 			}
 			
-			drawer.Draw();
+			console.Draw();
 		}
 
 		private Dictionary<string, InstancedTypeData<ConsoleCommand, ConsoleCommandAttribute>> GetCommands()
