@@ -10,6 +10,8 @@ namespace Padoru.Core.Diagnostics
 {
 	public class ConsoleInitializer : MonoBehaviour
 	{
+		private const string UNITY_LOG_CHANNEL = "Unity";
+		
 		private Console console;
 
 		private void Awake()
@@ -17,10 +19,16 @@ namespace Padoru.Core.Diagnostics
 			var commands = GetCommands();
 			
 			console = new Console(new HeaderDrawer(), new LogsAreaDrawer(), new InputFieldDrawer(commands.Keys.ToArray()), commands);
-			
-			var consoleOutput = new PadoruLoggerConsoleOutput(console);
-			
-			Debug.AddOutput(consoleOutput);
+
+			Application.logMessageReceived += (message, trace, type) =>
+			{
+				console.Log(new LogEntry()
+				{
+					message = message + Environment.NewLine + trace,
+					logType = UnityToPadoruLogType(type),
+					channel = UNITY_LOG_CHANNEL,
+				});
+			};
 		}
 
 		private void OnGUI()
@@ -59,6 +67,28 @@ namespace Padoru.Core.Diagnostics
 			Debug.Log(sb);
 
 			return commands;
+		}
+
+		private Padoru.Diagnostics.LogType UnityToPadoruLogType(LogType logType)
+		{
+			if (logType == LogType.Log)
+			{
+				return Padoru.Diagnostics.LogType.Info;
+			}
+			if (logType == LogType.Warning)
+			{
+				return Padoru.Diagnostics.LogType.Warning;
+			}
+			if (logType == LogType.Error)
+			{
+				return Padoru.Diagnostics.LogType.Error;
+			}
+			if (logType == LogType.Exception)
+			{
+				return Padoru.Diagnostics.LogType.Exception;
+			}
+
+			return Padoru.Diagnostics.LogType.Info;
 		}
 	}
 }

@@ -43,8 +43,6 @@ namespace Padoru.Core.Diagnostics
 			GUILayout.EndScrollView();
 			
 			var scrollViewRect = GUILayoutUtility.GetLastRect();
-			
-			Debug.LogError(scrollViewRect);
 
 			HandleMouseScrolling(scrollViewRect);
 		}
