@@ -16,7 +16,7 @@ namespace Padoru.Core.Diagnostics
 		
 		public void Draw()
 		{
-			GUI.SetNextControlName(Console.INPUT_FIELD_CONTROL_NAME);
+			GUI.SetNextControlName(ConsoleConstants.INPUT_FIELD_CONTROL_NAME);
 
 			// For some reason when using a GUIStyle on this one, the TextField disappears. 
 			// The background should be drawn here so we can stack the text and the suggestion horizontally
@@ -33,6 +33,7 @@ namespace Padoru.Core.Diagnostics
 			
 			Input = GUILayout.TextField(Input, inputFieldStyle, GUILayout.ExpandHeight(true));
 
+			// WIP
 			//DrawSuggestion();
 			
 			GUILayout.EndHorizontal();

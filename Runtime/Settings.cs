@@ -15,6 +15,7 @@ namespace Padoru.Core
 		public List<string> scenes;
 
 		[Header("Logging")] 
+		public bool usePadoruConsole;
 		public LogSettings logSettings;
 	}
 }

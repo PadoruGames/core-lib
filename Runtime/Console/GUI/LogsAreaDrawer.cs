@@ -6,7 +6,7 @@ namespace Padoru.Core.Diagnostics
 {
 	public class LogsAreaDrawer : ILogsAreaDrawer
 	{
-		private List<LogEntry> logs = new();
+		private List<ConsoleEntry> logs = new();
 		private Vector2 scrollPosition = Vector2.zero;
 		private Vector2 lastMousePosition = Vector2.zero;
 		
@@ -47,9 +47,9 @@ namespace Padoru.Core.Diagnostics
 			HandleMouseScrolling(scrollViewRect);
 		}
 
-		public void AddLog(LogEntry log)
+		public void AddLog(ConsoleEntry console)
 		{
-			logs.Add(log);
+			logs.Add(console);
 		}
 		
 		void HandleMouseScrolling(Rect scrollViewRect)

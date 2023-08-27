@@ -2,7 +2,7 @@ using Padoru.Diagnostics;
 
 namespace Padoru.Core.Diagnostics
 {
-	public class LogEntry
+	public class ConsoleEntry
 	{
 		public LogType logType;
 		public object message;

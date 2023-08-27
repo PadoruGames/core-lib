@@ -6,9 +6,6 @@ namespace Padoru.Core.Diagnostics
 	{
 		public void Draw()
 		{
-			var headerStyle = new GUIStyle(GUI.skin.box);
-			
-			GUILayout.Box("", headerStyle);
 		}
 	}
 }
