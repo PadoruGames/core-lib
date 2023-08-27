@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,6 +8,13 @@ namespace Padoru.Core.Diagnostics
 		private List<ConsoleEntry> logs = new();
 		private Vector2 scrollPosition = Vector2.zero;
 		private Vector2 lastMousePosition = Vector2.zero;
+		private LogEntryDrawer logEntryDrawer = new();
+		private Texture2D bgTex;
+
+		public LogsAreaDrawer()
+		{
+			bgTex = MakeTex(1, 1, new Color(0.2f, 0.2f, 0.2f, 0.5f));
+		}
 		
 		public void Draw()
 		{
@@ -17,27 +23,29 @@ namespace Padoru.Core.Diagnostics
 				stretchWidth = true,
 				padding = new RectOffset(0, 0, 0, 0),
 			};
-			
-			scrollPosition = GUILayout.BeginScrollView(scrollPosition, scrollViewStyle, GUILayout.MaxHeight(250));
-			
-			var bgTex = MakeTex(1, 1, new Color(0.2f, 0.2f, 0.2f, 0.5f));
-			var textAreaStyle = new GUIStyle()
+			var horizontalStyle = new GUIStyle
 			{
 				stretchWidth = true,
-				fixedHeight = 25,
+				fixedHeight = ConsoleConstants.LOG_ENTRY_HEIGHT,
 				alignment = TextAnchor.MiddleLeft,
 				normal =
 				{
 					textColor = Color.white,
 				},
-				padding = new RectOffset(5, 5, 0, 0),
+				padding = new RectOffset(0, 0, 0, 0),
 			};
+			
+			scrollPosition = GUILayout.BeginScrollView(scrollPosition, scrollViewStyle, GUILayout.MaxHeight(250));
 
 			for (int i = 0; i < logs.Count; i++)
 			{
-				textAreaStyle.normal.background = i % 2 == 0 ? bgTex : null;
+				horizontalStyle.normal.background = i % 2 == 0 ? bgTex : null;
 				
-				GUILayout.Button(GetFirstLine(logs[i].message.ToString()), textAreaStyle);
+				GUILayout.BeginHorizontal(horizontalStyle);
+				
+				logEntryDrawer.DrawEntry(logs[i], i);
+				
+				GUILayout.EndHorizontal();
 			}
 			
 			GUILayout.EndScrollView();
@@ -84,12 +92,6 @@ namespace Padoru.Core.Diagnostics
 			result.Apply();
 
 			return result;
-		}
-		
-		string GetFirstLine(string text)
-		{
-			string[] lines = text.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
-			return lines.Length > 0 ? lines[0] : string.Empty;
 		}
 	}
 }
