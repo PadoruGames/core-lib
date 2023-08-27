@@ -46,6 +46,11 @@ namespace Padoru.Core.Diagnostics
 			console.Draw();
 		}
 
+		private void LateUpdate()
+		{
+			UnityEngine.Debug.developerConsoleVisible = false;
+		}
+
 		private Dictionary<string, InstancedTypeData<ConsoleCommand, ConsoleCommandAttribute>> GetCommands()
 		{
 			var sb = new StringBuilder();
