@@ -22,7 +22,10 @@ namespace Padoru.Core.Diagnostics
 
 		private void LateUpdate()
 		{
-			UnityEngine.Debug.developerConsoleVisible = false;
+			if (UnityEngine.Debug.developerConsoleVisible)
+			{
+				UnityEngine.Debug.developerConsoleVisible = false;
+			}
 		}
 	}
 }
