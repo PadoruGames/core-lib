@@ -9,13 +9,13 @@ namespace Padoru.Core.DebugConsole
 		
 		public abstract void Execute(params object[] args);
 	
-		protected T ParseArgument<T>(object arg)
+		protected T ParseArgument<T>(object arg) where T : IConvertible
 		{
-			return (T)arg;
+			return (T)Convert.ChangeType(arg, typeof(T));
 		}
 	}
 	
-	public abstract class ConsoleCommand<T1, T2, T3, T4> : BaseConsoleCommand
+	public abstract class ConsoleCommand<T1, T2, T3, T4> : BaseConsoleCommand where T1 : IConvertible where T2 : IConvertible  where T3 : IConvertible  where T4 : IConvertible
 	{
 		protected abstract void Execute(T1 arg1, T2 arg2, T3 arg3, T4 arg4);
 
@@ -35,7 +35,7 @@ namespace Padoru.Core.DebugConsole
 		}
 	}
 	
-	public abstract class ConsoleCommand<T1, T2, T3> : BaseConsoleCommand
+	public abstract class ConsoleCommand<T1, T2, T3> : BaseConsoleCommand where T1 : IConvertible where T2 : IConvertible  where T3 : IConvertible
 	{
 		protected abstract void Execute(T1 arg1, T2 arg2, T3 arg3);
 
@@ -54,7 +54,7 @@ namespace Padoru.Core.DebugConsole
 		}
 	}
 	
-	public abstract class ConsoleCommand<T1, T2> : BaseConsoleCommand
+	public abstract class ConsoleCommand<T1, T2> : BaseConsoleCommand where T1 : IConvertible where T2 : IConvertible
 	{
 		protected abstract void Execute(T1 arg1, T2 arg2);
 
@@ -72,7 +72,7 @@ namespace Padoru.Core.DebugConsole
 		}
 	}
 	
-	public abstract class ConsoleCommand<T1> : BaseConsoleCommand
+	public abstract class ConsoleCommand<T1> : BaseConsoleCommand where T1 : IConvertible
 	{
 		protected abstract void Execute(T1 arg1);
 
