@@ -24,7 +24,7 @@ namespace Padoru.Core.DebugConsole
             var consoleConfig = new CommandsConsoleConfig()
             {
                 ToggleConsoleKey = KeyCode.BackQuote,
-                HandleInputKey = KeyCode.Return,
+                HandleInputKeys = new () { KeyCode.KeypadEnter, KeyCode.Return },
                 Commands = commands
             };
             

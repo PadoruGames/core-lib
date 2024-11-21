@@ -15,6 +15,7 @@ namespace Padoru.Core.DebugConsole
 		
 		private bool showConsole;
 		private string input;
+		private GUIStyle textFieldStyle;
 
 		public CommandsConsole(CommandsConsoleConfig config)
 		{
@@ -40,7 +41,7 @@ namespace Padoru.Core.DebugConsole
 				ToggleConsole();
 			}
 
-			if (Event.current.type == EventType.KeyDown && Event.current.keyCode == config.HandleInputKey)
+			if (Event.current.type == EventType.KeyDown && config.HandleInputKeys.Contains(Event.current.keyCode))
 			{
 				HandleInput();
 				input = string.Empty;
@@ -53,6 +54,15 @@ namespace Padoru.Core.DebugConsole
 
 		private void DrawConsole()
 		{
+			if (textFieldStyle == null)
+			{
+				textFieldStyle = new GUIStyle(GUI.skin.textField)
+				{
+					fontSize = 24,
+					alignment = TextAnchor.UpperLeft
+				};
+			}
+			
 			if (!showConsole)
 			{
 				return;
@@ -60,11 +70,11 @@ namespace Padoru.Core.DebugConsole
 
 			var y = 0f;
 
-			GUI.Box(new Rect(0, y, Screen.width, 30), "");
+			GUI.Box(new Rect(0, y, Screen.width, 50f), "");
 			GUI.backgroundColor = new Color(0, 0, 0, 0);
 
 			GUI.SetNextControlName(TEXT_FIELD_CONTROL_NAME);
-			input = GUI.TextField(new Rect(10f, y + 5f, Screen.width - 20f, 20f), input);
+			input = GUI.TextField(new Rect(10f, y + 5f, Screen.width - 20f, 50f), input, textFieldStyle);
 
 			if (input == "`")
 			{
