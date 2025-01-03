@@ -1,16 +1,17 @@
 using System;
+using UnityEngine;
 
 namespace Padoru.Core.Utils
 {
 	[Serializable]
 	public struct MinMax : IEquatable<MinMax>
 	{
-		public int Min;
-		public int Max;
+		public float Min;
+		public float Max;
 
 		public bool Equals(MinMax other)
 		{
-			return Min == other.Min && Max == other.Max;
+			return Mathf.Approximately(Min, other.Min) && Mathf.Approximately(Max, other.Max);
 		}
 
 		public override bool Equals(object obj)
