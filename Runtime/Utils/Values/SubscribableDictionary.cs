@@ -119,7 +119,7 @@ namespace Padoru.Core
             }
         }
 
-        public void Overwrite(IDictionary<TKey, TValue> elements)
+        public void Overwrite(IDictionary<TKey, TValue> elements, bool announce = true)
         {
             innerDictionary.Clear();
 
@@ -127,8 +127,11 @@ namespace Padoru.Core
             {
                 innerDictionary.Add(key, elements[key]);
             }
-            
-            OnDictionaryChanged?.Invoke(CollectionEvent.CollectionChanged, default);
+
+            if (announce)
+            {
+                OnDictionaryChanged?.Invoke(CollectionEvent.CollectionChanged, default);
+            }
         }
         
         public bool Remove(KeyValuePair<TKey, TValue> item)
