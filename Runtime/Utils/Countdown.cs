@@ -27,16 +27,12 @@ namespace Padoru.Core.Utils
 
 		public void Start()
 		{
-			Debug.Log($"Countdown started. Time: {startTime}");
-
 			currentTime = startTime;
 			tickManager.Register(this);
 		}
 
 		public void Stop()
 		{
-			Debug.Log("Countdown stopped");
-
 			tickManager.Unregister(this);
 		}
 
